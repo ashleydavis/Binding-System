@@ -45,9 +45,9 @@ namespace RSG.Tests
             mockValueBinding = new Mock<IValueBinding>();
         }
 
-        private void InitTestObject(int lenthOfArray, int index)
+        private void InitTestObject(int lengthOfArray, int index)
         {
-            testArray = Enumerable.Range(0, lenthOfArray)
+            testArray = Enumerable.Range(0, lengthOfArray)
                 .Select(i => new TestClass())
                 .ToArray();
 
@@ -56,7 +56,7 @@ namespace RSG.Tests
 
 
         [Fact]
-        public void disconnect()
+        public void can_disconnect()
         {
             Init();
             
@@ -68,31 +68,9 @@ namespace RSG.Tests
         }
 
         [Fact]
-        public void reconnect()
+        public void can_reconnect()
         {
             Init();
-
-            var otherList = new TestClass[]
-            {
-                new TestClass()
-                {
-                    X = 10
-                }
-            };
-
-            testObject.Connect(otherList);
-
-            mockValueBinding.Verify(m => m.Disconnect(), Times.Once());
-
-            mockValueBinding.Verify(m => m.Connect(otherList[0]), Times.Once());
-        }
-
-        [Fact]
-        public void explicit_disconnect_and_reconnect()
-        {
-            Init();
-
-            testObject.Disconnect();
 
             var otherList = new TestClass[]
             {
@@ -263,7 +241,7 @@ namespace RSG.Tests
             var events = new List<BoundCollectionChangedEventArgs>();
             testObject.CollectionChangedEventStream.Subscribe(ev => events.Add(ev));
 
-            var fakeCollectionChangedEventArgs = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset);
+            var fakeCollectionChangedEventArgs = new NotifyCollectionChangedEventArgs();
             childEventStream.OnNext(new BoundCollectionChangedEventArgs("Nested", fakeCollectionChangedEventArgs, null, null));
 
             Assert.Equal(1, events.Count);
